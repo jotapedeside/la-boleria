@@ -1,11 +1,17 @@
 import connection from '../models/index.js';
-import { queryGetOrders, queryPostOrder, getClientById, getCakeById, queryGetOrdersById } from '../repository/ordersQuery.js';
+import { queryGetOrders, queryGetOrdersByDate, queryPostOrder, getClientById, getCakeById, queryGetOrdersById } from '../repository/ordersQuery.js';
 
 export const getOrders = async (req, res) => {
+  const { date } = req.query;
   try {
-    const orders = await connection.query(queryGetOrders());
+    if (!date) {
+      const orders = await connection.query(queryGetOrders());
+      res.status(200).json({status: 200, orders: orders.rows});
+    } else if (date) {
+      const orders = await connection.query(queryGetOrdersByDate(date));
+      res.status(200).json({status: 200, orders: orders.rows});
+    }
 
-    res.status(200).json({status: 200, orders: orders.rows});
   } catch (error) {
     res.status(404).json({ message: error.message });
   }

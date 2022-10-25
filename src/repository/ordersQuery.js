@@ -2,6 +2,10 @@ export const queryGetOrders = () => {
   return `SELECT to_json(cl) as client, to_json(ca) as cake, orders.id AS "orderId", "quantity", CAST("totalPrice" AS MONEY), "createdAt"::timestamp(0)::text FROM "public.orders" as orders JOIN "public.clients" as cl ON cl.id = orders."clientId" JOIN "public.cakes" as ca ON ca.id = orders."cakeId";`;
 };
 
+export const queryGetOrdersByDate = (date) => {
+  return `SELECT to_json(cl) as client, to_json(ca) as cake, orders.id AS "orderId", "quantity", CAST("totalPrice" AS MONEY), "createdAt"::timestamp(0)::text FROM "public.orders" as orders JOIN "public.clients" as cl ON cl.id = orders."clientId" JOIN "public.cakes" as ca ON ca.id = orders."cakeId" WHERE "createdAt"::timestamp(0)::text LIKE '${date}%';`;
+};
+
 export const queryGetOrdersById = (id) => {
   return `SELECT to_json(cl) as client, to_json(ca) as cake, orders.id AS "orderId", "quantity", "totalPrice", "createdAt"::timestamp(0)::text FROM "public.orders" as orders JOIN "public.clients" as cl ON cl.id = orders."clientId" JOIN "public.cakes" as ca ON ca.id = orders."cakeId" WHERE orders.id = ${id};`;
 };
